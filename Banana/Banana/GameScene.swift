@@ -8,6 +8,7 @@
 
 import SpriteKit
 import AVFoundation
+import GameController
 
 let BananaCategoryName = "banana"
 let PaddleCategoryName = "paddle"
@@ -25,13 +26,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
     
     var focusOnPaddle = false
     var banana: SKSpriteNode?
-    var players: [AVAudioPlayer] = []
+    var player: AVAudioPlayer?
     var currentlyplayingSound = false
     
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
-        /* Setup your scene here */
+       
+        
+        
+        let controller = GCController.controllers().first
+
         
         let borderBody = SKPhysicsBody(edgeLoopFromRect: self.frame)
        
@@ -112,7 +117,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
         
         banana?.physicsBody?.contactTestBitMask = BottomCategory | BlockCategory
         
+     
         
+        controller?.motion?.valueChangedHandler = { motion in
+            
+            
+            print("x", motion.gravity.x)
+
+                var x = paddle.position.x + CGFloat(motion.gravity.x * 150)
+                let y: CGFloat = 50
+
+
+                if x < 0 {
+                    x = 0
+                } else if x > self.frame.width {
+                    x = self.frame.width
+                }
+//                if y < 0 {
+//                    y = 0
+//                } else if y > self.frame.height {
+//                    y = self.frame.height
+//                }
+            
+                paddle.position = CGPoint(x: x, y: y)
+
+        }
+        player = try? AVAudioPlayer(assetIdentifier: .Books)
+        player?.delegate = self
+        player?.prepareToPlay()
         
     }
     
@@ -120,6 +152,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
     // Persist the initial touch position of the remote
     var touchPositionX: CGFloat = 0.0
     var touchPositionY: CGFloat = 0.0
+    
+    
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
@@ -132,6 +166,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
             
             guard let paddle = self.childNodeWithName("paddle") else { return }
             let location = touch.locationInNode(self)
+            let previousLocation = touch.previousLocationInNode(self)
             
             if touchPositionX != 0.0 && touchPositionY != 0.0 {
                 
@@ -173,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        if let banana = self.childNodeWithName(BananaCategoryName) {
+        guard let banana = self.childNodeWithName(BananaCategoryName) else { return }
         
         let maxSpeed: CGFloat = 1000.0
         let speed = sqrt(banana.physicsBody!.velocity.dx * banana.physicsBody!.velocity.dx + banana.physicsBody!.velocity.dy * banana.physicsBody!.velocity.dy)
@@ -183,8 +218,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
         }
         else {
             banana.physicsBody!.linearDamping = 0.0
-           }
         }
+        
+        
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -213,7 +249,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
         }
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
             secondBody.node!.removeFromParent()
-            playSound(.Banana)
+            player?.play()
         
             
             if isGameWon() {
@@ -235,17 +271,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
         return numberOfBricks == 0
     }
     
+ 
+    
     func playSound(name: AVAudioPlayer.AssetIdentifier) {
         
-        guard currentlyplayingSound == false else { return }
+        guard !currentlyplayingSound else { return }
         
         if let player = try? AVAudioPlayer(assetIdentifier: name) {
             
             player.delegate = self
             player.play()
             currentlyplayingSound = true
-            players.append(player)
-            print(players.count)
+
             
         }
         
@@ -261,12 +298,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, AVAudioPlayerDelegate {
 extension AVAudioPlayer {
     
     enum AssetIdentifier: String {
-        case Banana
+        case Banana, Books
     }
     
-    
-    
-    
+
     enum AssetError: ErrorType { case AssetNotFound,AssetBadData }
     
     convenience init(assetIdentifier: AssetIdentifier) throws {

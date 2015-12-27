@@ -42,6 +42,7 @@
 		E69E4D0C1C09ECD3002DEE61 /* BananaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BananaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E69E4D101C09ECD3002DEE61 /* BananaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BananaTests.swift; sourceTree = "<group>"; };
 		E69E4D121C09ECD3002DEE61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6B37E461C18699E00AD7D70 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		E6C6AFFB1C0A6285003C3885 /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverScene.sks; sourceTree = "<group>"; };
 		E6C6AFFD1C0A634A003C3885 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +88,7 @@
 			children = (
 				E69E4D021C09ECD3002DEE61 /* Main.storyboard */,
 				E69E4CFC1C09ECD3002DEE61 /* GameScene.swift */,
+				E6B37E461C18699E00AD7D70 /* MyPlayground.playground */,
 				E6C6AFFB1C0A6285003C3885 /* GameOverScene.sks */,
 				E6C6AFFD1C0A634A003C3885 /* GameOverScene.swift */,
 				E69E4CFE1C09ECD3002DEE61 /* GameViewController.swift */,
