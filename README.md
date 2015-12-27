@@ -6,4 +6,4 @@ A  "brick-breaker" style tvOS game.
 - SpriteKit
 
 
-<img src="https://github.com/macbellingrath/Banana/blob/master/screenshot.png" alt="screenshot" height=667  width=375></img>
+<img src="https://github.com/macbellingrath/Banana/blob/master/screenshot.png" alt="screenshot" height=267  width=480></img>
